@@ -52,13 +52,12 @@ namespace MyWebApiApp.Data
         #endregion
 
         #region Get Cart Items by Cart
-        public IEnumerable<CartItemModel> GetCartItemsByCartOrInvoice(int? cartId, int? invoiceId)
+        public IEnumerable<CartItemModel> GetCartItemsByCart(int cartId)
         {
             var items = new List<CartItemModel>();
             var dt = _dBHelper.ExecuteDataTable(
                 "PR_CartItem_ListByCart",
-                new SqlParameter("@CartID", cartId),
-                new SqlParameter("@InvoiceID", invoiceId)
+                new SqlParameter("@CartID", cartId)
             );
 
             foreach (DataRow row in dt.Rows)
@@ -71,7 +70,7 @@ namespace MyWebApiApp.Data
                     Quantity = Convert.ToInt32(row["Quantity"]),
                     TotalAmount = Convert.ToDecimal(row["TotalAmount"]),
                     Price = Convert.ToDecimal(row["Price"])
-                    });
+                });
             }
             return items;
         }

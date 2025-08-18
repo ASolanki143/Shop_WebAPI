@@ -17,11 +17,11 @@ namespace MyWebApiApp.Controllers
         }
 
         #region List Cart Items
-        [HttpGet()]
-        public IActionResult GetCartItems(int? cartId,int? invoiceId)
+        [HttpGet("{cartId}")]
+        public IActionResult GetCartItems(int cartId)
         {
             ApiResponse response;
-            var items = _cartItemService.GetCartItemsByCart(cartId,invoiceId);
+            var items = _cartItemService.GetCartItemsByCart(cartId);
             if (items == null || !items.Any())
             {
                 response = new ApiResponse("No items found for this cart", 404);
@@ -45,8 +45,7 @@ namespace MyWebApiApp.Controllers
             bool isAdded = _cartItemService.AddCartItem(cartItem);
             if (!isAdded)
             {
-                response = new ApiResponse("Error while adding cart item", 400);
-                return BadRequest(response);
+                throw new Exception("Error while inserting cart item");
             }
             response = new ApiResponse("Cart item added successfully", 200);
             return Ok(response);
@@ -66,8 +65,7 @@ namespace MyWebApiApp.Controllers
             bool isUpdated = _cartItemService.UpdateCartItem(cartItemId, cartItem.Quantity);
             if (!isUpdated)
             {
-                response = new ApiResponse("Error while updating cart item", 400);
-                return BadRequest(response);
+                throw new Exception("Error while updating cart item");
             }
             response = new ApiResponse("Cart item updated successfully", 200);
             return Ok(response);
@@ -87,8 +85,7 @@ namespace MyWebApiApp.Controllers
             bool isDeleted = _cartItemService.DeleteCartItem(cartItemId);
             if (!isDeleted)
             {
-                response = new ApiResponse("Error while deleting cart item", 400);
-                return BadRequest(response);
+                throw new Exception("Error while deleting cart item");
             }
             response = new ApiResponse("Cart item deleted successfully", 200);
             return Ok(response);
