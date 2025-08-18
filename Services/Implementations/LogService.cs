@@ -3,10 +3,10 @@ using MyWebApiApp.Services.Interfaces;
 
 namespace MyWebApiApp.Services.Implementations
 {
-    public class MongoLogService : IMongoLogServices
+    public class LogService : ILogServices
     {
         private readonly IMongoCollection<LogModel> _logs;
-        public MongoLogService()
+        public LogService()
         {
             // 👇 change connection string if needed
             var client = new MongoClient("mongodb://localhost:27017");

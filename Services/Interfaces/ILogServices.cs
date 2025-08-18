@@ -1,6 +1,6 @@
 namespace MyWebApiApp.Services.Interfaces
 {
-    public interface IMongoLogServices
+    public interface ILogServices
     {
         void InsertLog(string eventType, string? description, string? userId);
     }
