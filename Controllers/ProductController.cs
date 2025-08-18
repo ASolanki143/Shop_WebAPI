@@ -109,7 +109,7 @@ namespace MyWebApiApp.Controllers
                 return BadRequest(response);
             }
 
-            bool isUpdated = _productService.DeleteProduct(ProductID);
+            bool isUpdated = _productService.DeleteProduct(productId);
             if (!isUpdated)
             {
                 throw new Exception("Error while deleting product");
@@ -120,7 +120,7 @@ namespace MyWebApiApp.Controllers
             string? userId = userIdValue?.ToString();
             string? username = HttpContext.Session.GetString("UserName");
             _logService.InsertLog("Delete", $"Product Deleted by {username}", userId);
-            
+
             response = new ApiResponse("Product Delete Successfully", 200);
             return Ok(response);
         }
