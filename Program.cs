@@ -114,6 +114,7 @@ builder.Services.AddScoped<ProductRepository>();
 builder.Services.AddScoped<CartRepository>();
 builder.Services.AddScoped<CartItemRepository>();
 builder.Services.AddScoped<InvoiceRepository>();
+builder.Services.AddScoped<InvoiceItemRepository>();
 
 builder.Services.Scan(scan => scan
     .FromAssemblies(Assembly.GetExecutingAssembly())
@@ -124,7 +125,7 @@ builder.Services.Scan(scan => scan
 
 // ✅ Session config
 builder.Services.AddDistributedMemoryCache();
-builder.Services.AddScoped<LogActionFilter>();
+// builder.Services.AddScoped<LogActionAttribute>();
 
 
 var app = builder.Build();

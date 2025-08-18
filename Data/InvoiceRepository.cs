@@ -38,6 +38,7 @@ namespace MyWebApiApp.Data
             {
                 invoices.Add(new InvoiceResponse()
                 {
+                    InvoiceID = Convert.ToInt32(row["InvoiceID"]),
                     TotalAmount = Convert.ToDecimal(row["TotalAmount"]),
                     UserName = row["UserName"].ToString(),
                     Email = row["Email"].ToString(),

@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
+using MyWebApiApp.Filters;
 using MyWebApiApp.Models.DTOs;
 using MyWebApiApp.Services.Implementations;
 using MyWebApiApp.Services.Interfaces;
@@ -10,13 +11,13 @@ namespace MyWebApiApp.Controllers
     public class InvoiceController : ControllerBase
     {
         private readonly IInvoiceServices _invoiceService;
-        private readonly MongoLogService _logService = new MongoLogService();
         public InvoiceController(IInvoiceServices invoiceServices)
         {
             _invoiceService = invoiceServices;
         }
 
         #region Create Invoice from Cart
+        [LogAction("Invoice Insert")]
         [HttpPost("CreateFromCart/{cartId}")]
         public IActionResult CreateInvoiceFromCart(int cartId)
         {
@@ -32,12 +33,6 @@ namespace MyWebApiApp.Controllers
             {
                 throw new Exception("Error while creating invoice from cart");
             }
-
-            // for log
-            int? userIdValue = HttpContext.Session.GetInt32("UserID");
-            string? userId = userIdValue?.ToString();
-            string? username = HttpContext.Session.GetString("UserName");
-            _logService.InsertLog("Insert", $"Invoice Inserted by {username}", userId);
 
             response = new ApiResponse("Invoice created successfully", 200);
             return Ok(response);

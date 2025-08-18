@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
+using MyWebApiApp.Filters;
 using MyWebApiApp.Models.DTOs;
 using MyWebApiApp.Services.Implementations;
 using MyWebApiApp.Services.Interfaces;
@@ -10,7 +11,6 @@ namespace MyWebApiApp.Controllers
     public class UserController : ControllerBase
     {
         private readonly IUserService? _userService;
-        private readonly MongoLogService _logService = new MongoLogService();
         public UserController(IUserService userService)
         {
             _userService = userService;
@@ -32,6 +32,7 @@ namespace MyWebApiApp.Controllers
         }
         #endregion
 
+        [LogAction("Login")]
         [HttpPost("LoginUser")]
         public IActionResult LoginUser(LoginRequest? request)
         {
@@ -42,9 +43,7 @@ namespace MyWebApiApp.Controllers
                 response = new ApiResponse("User Not found", 404);
                 return NotFound(response);
             }
-            string? userId = user.UserID.ToString();
-            string role = user.Role;
-            // _logService.InsertLog("Login", $"{role} logged in", userId);
+            Console.WriteLine("User Login ...........");
             response = new ApiResponse(user, "User login successfully", 200);
             return Ok(response);
         }
@@ -53,9 +52,6 @@ namespace MyWebApiApp.Controllers
         public IActionResult Logout()
         {
             LogoutResult user = _userService.Logout();
-            string? userId = user.UserID;
-            string? role = user.Role;
-            // _logService.InsertLog("Logout", $"{role} logged out", userId);
             ApiResponse response = new ApiResponse("Logged out successfully.", 200);
             return Ok(response);
         }

@@ -9,6 +9,7 @@ namespace MyWebApiApp.Services.Implementations
     {
         private readonly UserRepository? _userRepository;
         private readonly IHttpContextAccessor _httpContextAccessor;
+        private readonly ILogServices _logServices = new LogService();
         public UserService(UserRepository userRepository, IHttpContextAccessor httpContextAccessor)
         {
             _userRepository = userRepository;
@@ -45,8 +46,10 @@ namespace MyWebApiApp.Services.Implementations
             var session = _httpContextAccessor.HttpContext!.Session;
             string? role = session.GetString("Role");
             int? userIdValue = session.GetInt32("UserID");
-
+            string? userName = session.GetString("UserName");
             string? userId = userIdValue?.ToString();
+
+            _logServices.InsertLog("Logout", $"Logout by {userName}.", userId);
             session.Clear();
             return new LogoutResult
             {

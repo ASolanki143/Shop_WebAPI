@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
+using MyWebApiApp.Filters;
 using MyWebApiApp.Models;
 using MyWebApiApp.Models.DTOs;
-using MyWebApiApp.Services.Implementations;
 using MyWebApiApp.Services.Interfaces;
 
 namespace MyWebApiApp.Controllers
@@ -11,7 +11,6 @@ namespace MyWebApiApp.Controllers
     public class ProductController : ControllerBase
     {
         private readonly IProductServices _productService;
-        private readonly MongoLogService _logService = new MongoLogService();
 
         public ProductController(IProductServices productServices)
         {
@@ -35,6 +34,7 @@ namespace MyWebApiApp.Controllers
         #endregion
 
         #region Add Product
+        [LogAction("Product Insert")]
         [HttpPost]
         public IActionResult AddProduct([FromBody] ProductModel product)
         {
@@ -53,18 +53,13 @@ namespace MyWebApiApp.Controllers
                 throw new Exception("Error while inserting Product");
             }
 
-            // for log
-            int? userIdValue = HttpContext.Session.GetInt32("UserID");
-            string? userId = userIdValue?.ToString();
-            string? username = HttpContext.Session.GetString("UserName");
-            _logService.InsertLog("Insert", $"Product Inserted by {username}", userId);
-
             response = new ApiResponse("Inserted Successfully",200);
             return Ok(response);
         }
         #endregion
 
         #region Update Product
+        [LogAction("Product Update")]
         [HttpPut("{ProductID}")]
         public IActionResult UpdateProduct(int productId, ProductModel product)
         {
@@ -86,18 +81,13 @@ namespace MyWebApiApp.Controllers
                 throw new Exception("Error while updating product");
             }
 
-            // for log
-            int? userIdValue = HttpContext.Session.GetInt32("UserID");
-            string? userId = userIdValue?.ToString();
-            string? username = HttpContext.Session.GetString("UserName");
-            _logService.InsertLog("Update", $"Product Updated by {username}", userId);
-
             response = new ApiResponse("Product Updated Successfully", 200);
             return Ok(response);
         }
         #endregion
 
         #region Delete Product
+        [LogAction("Product Delete")]
         [HttpPatch("Delete/{ProductID}")]
         public IActionResult DeleteProduct(int productId)
         {
@@ -114,12 +104,6 @@ namespace MyWebApiApp.Controllers
             {
                 throw new Exception("Error while deleting product");
             }
-
-            // for log
-            int? userIdValue = HttpContext.Session.GetInt32("UserID");
-            string? userId = userIdValue?.ToString();
-            string? username = HttpContext.Session.GetString("UserName");
-            _logService.InsertLog("Delete", $"Product Deleted by {username}", userId);
 
             response = new ApiResponse("Product Delete Successfully", 200);
             return Ok(response);
