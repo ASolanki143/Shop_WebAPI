@@ -31,9 +31,9 @@ namespace MyWebApiApp.Services.Implementations
             return isUpdated;
         }
 
-        public bool DeleteProduct(int ProductID)
+        public bool DeleteProduct(int productId)
         {
-            bool isDeleted = _productRepository.DeleteProduct(ProductID);
+            bool isDeleted = _productRepository.DeleteProduct(productId);
             return isDeleted;
         }
     } 

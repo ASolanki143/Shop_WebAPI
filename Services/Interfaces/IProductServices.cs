@@ -7,6 +7,6 @@ namespace MyWebApiApp.Services.Interfaces
         IEnumerable<ProductModel> GetAllProducts();
         bool AddProduct(ProductModel product);
         bool EditProduct(ProductModel product);
-        bool DeleteProduct(int ProductID); 
+        bool DeleteProduct(int productId); 
     }
 }

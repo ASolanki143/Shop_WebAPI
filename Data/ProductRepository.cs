@@ -63,11 +63,11 @@ namespace MyWebApiApp.Data
         #endregion
 
         #region Delete Product
-        public bool DeleteProduct(int ProductID)
+        public bool DeleteProduct(int productId)
         {
             int rowAffected = _dBHelper.ExecuteNonQuery(
                 "PR_Product_Delete",
-                new SqlParameter("@ProductID", ProductID)
+                new SqlParameter("@ProductID", productId)
             );
             return rowAffected > 0;
         }

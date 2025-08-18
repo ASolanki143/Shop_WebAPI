@@ -39,21 +39,26 @@ namespace MyWebApiApp.Controllers
         public IActionResult AddProduct([FromBody] ProductModel product)
         {
             ApiResponse response;
+
             if (product == null)
             {
                 response = new ApiResponse("Product is null", 400);
                 return BadRequest(response);
             }
+
             bool isInserted = _productService.AddProduct(product);
+
             if (!isInserted)
             {
-                response = new ApiResponse("Error while inserting product", 400);
-                return BadRequest(response);
+                throw new Exception("Error while inserting Product");
             }
+
+            // for log
             int? userIdValue = HttpContext.Session.GetInt32("UserID");
             string? userId = userIdValue?.ToString();
             string? username = HttpContext.Session.GetString("UserName");
             _logService.InsertLog("Insert", $"Product Inserted by {username}", userId);
+
             response = new ApiResponse("Inserted Successfully",200);
             return Ok(response);
         }
@@ -61,50 +66,61 @@ namespace MyWebApiApp.Controllers
 
         #region Update Product
         [HttpPut("{ProductID}")]
-        public IActionResult UpdateProduct(int ProductID, ProductModel product)
+        public IActionResult UpdateProduct(int productId, ProductModel product)
         {
             ApiResponse response;
-            if (ProductID <= 0)
+
+            if (productId <= 0)
             {
                 response = new ApiResponse("ProductID is required", 400);
                 return BadRequest(response);
             }
-            product.ProductID = ProductID;
+
+            // add productid to product model
+            product.ProductID = productId;
+
             bool isUpdated = _productService.EditProduct(product);
+
             if (!isUpdated)
             {
-                response = new ApiResponse("Error while updating product", 400);
-                return BadRequest(response);
+                throw new Exception("Error while updating product");
             }
+
+            // for log
             int? userIdValue = HttpContext.Session.GetInt32("UserID");
             string? userId = userIdValue?.ToString();
             string? username = HttpContext.Session.GetString("UserName");
             _logService.InsertLog("Update", $"Product Updated by {username}", userId);
+
             response = new ApiResponse("Product Updated Successfully", 200);
             return Ok(response);
         }
         #endregion
 
         #region Delete Product
-        [HttpPatch("Delete{ProductID}")]
-        public IActionResult DeleteProduct(int ProductID)
+        [HttpPatch("Delete/{ProductID}")]
+        public IActionResult DeleteProduct(int productId)
         {
             ApiResponse response;
-            if (ProductID <= 0)
+
+            if (productId <= 0)
             {
                 response = new ApiResponse("ProductID is required", 400);
                 return BadRequest(response);
             }
+
             bool isUpdated = _productService.DeleteProduct(ProductID);
             if (!isUpdated)
             {
-                response = new ApiResponse("Error while deleting product", 400);
-                return BadRequest(response);
+                throw new Exception("Error while deleting product");
             }
+
+            // for log
             int? userIdValue = HttpContext.Session.GetInt32("UserID");
             string? userId = userIdValue?.ToString();
             string? username = HttpContext.Session.GetString("UserName");
             _logService.InsertLog("Delete", $"Product Deleted by {username}", userId);
+            
             response = new ApiResponse("Product Delete Successfully", 200);
             return Ok(response);
         }
