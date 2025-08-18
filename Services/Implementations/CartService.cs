@@ -15,40 +15,33 @@ namespace MyWebApiApp.Services.Implementations
             _cartRepository = cartRepository;
         }
 
-        public IEnumerable<CartModel> GetAllCart(int? UserID)
+        public IEnumerable<CartModel> GetAllCart(int? userId)
         {
-            var carts = _cartRepository.SelectAllCarts(UserID);
+            var carts = _cartRepository.SelectAllCarts(userId);
             return carts;
         }
 
-        public IEnumerable<CartModel> GetAllCartForUser(int UserID)
+        public bool AddCart(int userId, List<CartItemDto> cartItems)
         {
-            var carts = _cartRepository.SelectAllCartsByUser(UserID);
-            return carts;
-        }
-
-        public bool AddCart(int UserID, List<CartItemDto> cartItems)
-        {
-            int isInserted = _cartRepository.AddCart(UserID);
-            int cartID = isInserted;
+            int cartId = _cartRepository.AddCart(userId);
             foreach (CartItemDto model in cartItems)
             {
-                model.CartID = cartID;
+                model.CartID = cartId;
                 _cartItemService.AddCartItem(model);
             }
-            UpdateTotal(cartID);
-            return isInserted > 0;
+            UpdateTotal(cartId);
+            return cartId > 0;
         }
 
-        public bool DeleteCart(int CartID)
+        public bool DeleteCart(int cartId)
         {
-            bool isDeleted = _cartRepository.DeleteCart(CartID);
+            bool isDeleted = _cartRepository.DeleteCart(cartId);
             return isDeleted;
         }
 
-        public bool UpdateTotal(int CartID)
+        public bool UpdateTotal(int cartId)
         {
-            bool isUpdated = _cartRepository.UpdateCartTotal(CartID);
+            bool isUpdated = _cartRepository.UpdateCartTotal(cartId);
             return isUpdated;
         }
     }

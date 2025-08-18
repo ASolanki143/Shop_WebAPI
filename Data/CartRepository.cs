@@ -17,22 +17,22 @@ namespace MyWebApiApp.Data
         #region Add Cart
         public int AddCart(int userId, decimal totalAmount = 0.0m)
         {
-            int CartID = Convert.ToInt32(_dBHelper.ExecuteScalar(
+            int cartId = Convert.ToInt32(_dBHelper.ExecuteScalar(
                 "PR_Cart_Add",
                 new SqlParameter("@UserID", userId),
                 new SqlParameter("@TotalAmount", totalAmount)
             ));
-            return CartID;
+            return cartId;
         }
         #endregion
 
         #region Get All Carts
-        public IEnumerable<CartModel> SelectAllCarts(int? UserID)
+        public IEnumerable<CartModel> SelectAllCarts(int? userId)
         {
             var carts = new List<CartModel>();
             var dt = _dBHelper.ExecuteDataTable(
                 "PR_Cart_ListAll",
-                new SqlParameter("@UserID",UserID)
+                new SqlParameter("@UserID",userId)
             );
             foreach (DataRow row in dt.Rows)
             {
@@ -49,29 +49,6 @@ namespace MyWebApiApp.Data
         }
         #endregion
 
-        #region Get All Carts for a User
-        public IEnumerable<CartModel> SelectAllCartsByUser(int userId)
-        {
-            var carts = new List<CartModel>();
-            var dt = _dBHelper.ExecuteDataTable(
-                "PR_Cart_ListAll_User",
-                new SqlParameter("@UserID",userId)
-            );
-            foreach (DataRow row in dt.Rows)
-            {
-                carts.Add(new CartModel()
-                {
-                    CartID = Convert.ToInt32(row["CartID"]),
-                    TotalAmount = Convert.ToDecimal(row["TotalAmount"]),
-                    UserID = Convert.ToInt32(row["UserID"]),
-                    CreatedDate = Convert.ToDateTime(row["CreatedDate"]),
-                    CartItemCount = Convert.ToInt32(row["CartItemCount"])
-                    });
-            }
-            return carts;
-        }
-        #endregion
-
         #region Delete Cart
         public bool DeleteCart(int cartId)
         {
@@ -82,24 +59,6 @@ namespace MyWebApiApp.Data
             return rowAffected > 0;
         }
         #endregion
-
-        // #region Move Cart to Invoice
-        // public bool MoveCartToInvoice(int cartId)
-        // {
-        //     using (SqlConnection conn = new SqlConnection(_connectionString))
-        //     {
-        //         SqlCommand cmd = new SqlCommand("PR_Cart_ToInvoice", conn)
-        //         {
-        //             CommandType = CommandType.StoredProcedure
-        //         };
-        //         cmd.Parameters.AddWithValue("@CartID", cartId);
-
-        //         conn.Open();
-        //         int rowAffected = cmd.ExecuteNonQuery();
-        //         return rowAffected > 0;
-        //     }
-        // }
-        // #endregion
 
         #region Update Total Amount
         public bool UpdateCartTotal(int cartId)
