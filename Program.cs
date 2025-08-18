@@ -136,10 +136,15 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
+if (!app.Environment.IsDevelopment())
+{
+    app.UseExceptionHandler("/error");
+}
 // app.UseHttpsRedirection();
 
 // ✅ Order matters — session BEFORE auth & middleware
 app.UseSession();
+
 app.UseAuthorization();
 app.Use(async (context, next) =>
 {
