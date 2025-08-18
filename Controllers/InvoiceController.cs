@@ -1,6 +1,4 @@
 using Microsoft.AspNetCore.Mvc;
-using MyWebApiApp.Data;
-using MyWebApiApp.Models;
 using MyWebApiApp.Models.DTOs;
 using MyWebApiApp.Services.Implementations;
 using MyWebApiApp.Services.Interfaces;
@@ -12,9 +10,7 @@ namespace MyWebApiApp.Controllers
     public class InvoiceController : ControllerBase
     {
         private readonly IInvoiceServices _invoiceService;
-
         private readonly MongoLogService _logService = new MongoLogService();
-        
         public InvoiceController(IInvoiceServices invoiceServices)
         {
             _invoiceService = invoiceServices;
@@ -34,13 +30,15 @@ namespace MyWebApiApp.Controllers
             bool isCreated = _invoiceService.InsertInvoice(cartId);
             if (!isCreated)
             {
-                response = new ApiResponse("Error while creating invoice from cart", 400);
-                return BadRequest(response);
+                throw new Exception("Error while creating invoice from cart");
             }
-             int? userIdValue = HttpContext.Session.GetInt32("UserID");
+
+            // for log
+            int? userIdValue = HttpContext.Session.GetInt32("UserID");
             string? userId = userIdValue?.ToString();
             string? username = HttpContext.Session.GetString("UserName");
             _logService.InsertLog("Insert", $"Invoice Inserted by {username}", userId);
+
             response = new ApiResponse("Invoice created successfully", 200);
             return Ok(response);
         }
@@ -51,13 +49,13 @@ namespace MyWebApiApp.Controllers
         public IActionResult GetAllInvoices()
         {
             ApiResponse response;
-            int? UserID = null;
-            string role = HttpContext.Session.GetString("Role");
+            int? userId = null;
+            string? role = HttpContext.Session.GetString("Role");
             if (role == "User")
             {
-                UserID = HttpContext.Session.GetInt32("UserID");
+                userId = HttpContext.Session.GetInt32("UserID");
             }
-            var invoices = _invoiceService.GetAllInvices(UserID);
+            var invoices = _invoiceService.GetAllInvices(userId);
             if (invoices == null || !invoices.Any())
             {
                 response = new ApiResponse("No invoices found", 404);

@@ -1,12 +1,10 @@
-using MyWebApiApp.Models;
+using MyWebApiApp.Models.DTOs;
 
 namespace MyWebApiApp.Services.Interfaces
 {
     public interface IInvoiceServices
     {
-        bool InsertInvoice(int CartID);
-        IEnumerable<InvoiceModel> GetAllInvices(int? UserID);
-        IEnumerable<InvoiceModel> GetAllInvoicesForUser(int UserID);
-        
+        bool InsertInvoice(int cartId);
+        IEnumerable<InvoiceResponse> GetAllInvices(int? userId);        
     }
 }

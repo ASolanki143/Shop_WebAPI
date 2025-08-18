@@ -1,6 +1,5 @@
 using System.Data;
 using Microsoft.Data.SqlClient;
-using MyWebApiApp.Models;
 using MyWebApiApp.Models.DTOs;
 using MyWebApiApp.Utilities;
 
@@ -27,12 +26,12 @@ namespace MyWebApiApp.Data
         #endregion
 
         #region List All Invoices
-        public IEnumerable<InvoiceResponse> GetAllInvoices(int? UserID)
+        public IEnumerable<InvoiceResponse> GetAllInvoices(int? userId)
         {
             var invoices = new List<InvoiceResponse>();
             var dt = _dBHelper.ExecuteDataTable(
                 "PR_Invoice_ListAll",
-                new SqlParameter("@UserID", UserID)
+                new SqlParameter("@UserID", userId)
             );
 
             foreach (DataRow row in dt.Rows)
@@ -43,7 +42,7 @@ namespace MyWebApiApp.Data
                     UserName = row["UserName"].ToString(),
                     Email = row["Email"].ToString(),
                     CreatedDate = Convert.ToDateTime(row["CreatedDate"]),
-                    InvoiceItemCount = Convert.ToInt32(row["CartItemCount"])
+                    InvoiceItemCount = Convert.ToInt32(row["InvoiceItemCount"])
                 });
             }
             return invoices;
