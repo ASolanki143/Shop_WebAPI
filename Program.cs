@@ -72,6 +72,7 @@ using MyWebApiApp.Services.Interfaces;
 using MyWebApiApp.Utilities;
 using System.Reflection;
 using Scrutor;
+using MyWebApiApp.Filters;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -123,6 +124,7 @@ builder.Services.Scan(scan => scan
 
 // ✅ Session config
 builder.Services.AddDistributedMemoryCache();
+builder.Services.AddScoped<LogActionFilter>();
 
 
 var app = builder.Build();
