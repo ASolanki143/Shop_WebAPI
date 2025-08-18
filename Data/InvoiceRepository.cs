@@ -1,6 +1,7 @@
 using System.Data;
 using Microsoft.Data.SqlClient;
 using MyWebApiApp.Models;
+using MyWebApiApp.Models.DTOs;
 using MyWebApiApp.Utilities;
 
 namespace MyWebApiApp.Data
@@ -26,9 +27,9 @@ namespace MyWebApiApp.Data
         #endregion
 
         #region List All Invoices
-        public IEnumerable<InvoiceModel> GetAllInvoices(int? UserID)
+        public IEnumerable<InvoiceResponse> GetAllInvoices(int? UserID)
         {
-            var invoices = new List<InvoiceModel>();
+            var invoices = new List<InvoiceResponse>();
             var dt = _dBHelper.ExecuteDataTable(
                 "PR_Invoice_ListAll",
                 new SqlParameter("@UserID", UserID)
@@ -36,41 +37,13 @@ namespace MyWebApiApp.Data
 
             foreach (DataRow row in dt.Rows)
             {
-                invoices.Add(new InvoiceModel()
+                invoices.Add(new InvoiceResponse()
                 {
-                    InvoiceID = Convert.ToInt32(row["InvoiceID"]),
-                    UserID = Convert.ToInt32(row["UserID"]),
                     TotalAmount = Convert.ToDecimal(row["TotalAmount"]),
                     UserName = row["UserName"].ToString(),
                     Email = row["Email"].ToString(),
                     CreatedDate = Convert.ToDateTime(row["CreatedDate"]),
-                    CartItemCount = Convert.ToInt32(row["CartItemCount"])
-                });
-            }
-            return invoices;
-        }
-        #endregion
-
-        #region Get All Invoices By User
-        public IEnumerable<InvoiceModel> GetAllInvoiceByUser(int UserID)
-        {
-            var invoices = new List<InvoiceModel>();
-            var dt = _dBHelper.ExecuteDataTable(
-                "PR_Invoice_SelectByUser",
-                new SqlParameter("@UserID", UserID)
-            );
-
-            foreach (DataRow row in dt.Rows)
-            {
-                invoices.Add(new InvoiceModel()
-                {
-                    InvoiceID = Convert.ToInt32(row["InvoiceID"]),
-                    UserID = Convert.ToInt32(row["UserID"]),
-                    TotalAmount = Convert.ToDecimal(row["TotalAmount"]),
-                    UserName = row["UserName"].ToString(),
-                    Email = row["Email"].ToString(),
-                    CreatedDate = Convert.ToDateTime(row["CreatedDate"])
-
+                    InvoiceItemCount = Convert.ToInt32(row["CartItemCount"])
                 });
             }
             return invoices;
