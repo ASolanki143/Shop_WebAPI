@@ -3,28 +3,34 @@ using MyWebApiApp.Services.Interfaces;
 
 namespace MyWebApiApp.Filters
 {
-    public class LogActionFilter : IActionFilter
+    // Usage: [LogAction("Product Updated")]
+    public class LogActionAttribute : ActionFilterAttribute
     {
-        private readonly ILogServices _logServices;
-        private readonly IHttpContextAccessor _httpContextAccessor;
+        private readonly string _actionName;
 
-        public LogActionFilter(ILogServices logServices, IHttpContextAccessor httpContextAccessor)
+        public LogActionAttribute(string actionName)
         {
-            _logServices = logServices;
-            _httpContextAccessor = httpContextAccessor;
+            _actionName = actionName;
         }
 
-        public void OnActionExecuting(ActionExecutingContext context)
+        public override void OnActionExecuted(ActionExecutedContext context)
         {
-            var httpContext = _httpContextAccessor.HttpContext;
-            string? userId = httpContext?.Session.GetInt32("UserID")?.ToString();
-            string? username = httpContext?.Session.GetString("UserName");
+            var http = context.HttpContext;
+            var logService = http.RequestServices.GetService(typeof(ILogServices)) as ILogServices;
 
-            var actionName = context.ActionDescriptor.DisplayName;
+            string? userId = http.Session.GetInt32("UserID")?.ToString();
+            string userName = http.Session.GetString("UserName") ?? "Unknown";
 
-            _logServices.InsertLog("Action", $"{actionName} executed by {username}", userId);
+            if (context.Exception == null)
+            {
+                // ✅ Success log
+                logService?.InsertLog(_actionName, $"{_actionName} by {userName}", userId);
+            }
+            else
+            {
+                // ❌ Failure log
+                logService?.InsertLog(_actionName, $"{_actionName} failed for {userName}: {context.Exception.Message}", userId);
+            }
         }
-
-        public void OnActionExecuted(ActionExecutedContext context){}
     }
 }
