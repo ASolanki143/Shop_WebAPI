@@ -13,6 +13,8 @@ namespace MyWebApiApp.Controllers
     {
         private readonly IInvoiceServices _invoiceService;
 
+        private readonly MongoLogService _logService = new MongoLogService();
+        
         public InvoiceController(IInvoiceServices invoiceServices)
         {
             _invoiceService = invoiceServices;
@@ -35,6 +37,10 @@ namespace MyWebApiApp.Controllers
                 response = new ApiResponse("Error while creating invoice from cart", 400);
                 return BadRequest(response);
             }
+             int? userIdValue = HttpContext.Session.GetInt32("UserID");
+            string? userId = userIdValue?.ToString();
+            string? username = HttpContext.Session.GetString("UserName");
+            _logService.InsertLog("Insert", $"Invoice Inserted by {username}", userId);
             response = new ApiResponse("Invoice created successfully", 200);
             return Ok(response);
         }

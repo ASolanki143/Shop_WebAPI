@@ -40,10 +40,19 @@ namespace MyWebApiApp.Services.Implementations
             return users;
         }
 
-        public void Logout()
+        public LogoutResult Logout()
         {
             var session = _httpContextAccessor.HttpContext!.Session;
+            string role = session.GetString("Role");
+            int? userIdValue = session.GetInt32("UserID");
+
+            string? userId = userIdValue?.ToString();
             session.Clear();
+            return new LogoutResult
+            {
+                Role = role,
+                UserID = userId
+            };
         }
     }
 }

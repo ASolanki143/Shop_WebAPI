@@ -17,11 +17,11 @@ namespace MyWebApiApp.Controllers
         }
 
         #region List Cart Items
-        [HttpGet("Cart/{cartId}")]
-        public IActionResult GetCartItems(int cartId)
+        [HttpGet()]
+        public IActionResult GetCartItems(int? cartId,int? invoiceId)
         {
             ApiResponse response;
-            var items = _cartItemService.GetCartItemsByCart(cartId);
+            var items = _cartItemService.GetCartItemsByCart(cartId,invoiceId);
             if (items == null || !items.Any())
             {
                 response = new ApiResponse("No items found for this cart", 404);

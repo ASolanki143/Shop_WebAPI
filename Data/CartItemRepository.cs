@@ -52,23 +52,25 @@ namespace MyWebApiApp.Data
         #endregion
 
         #region Get Cart Items by Cart
-        public IEnumerable<CartItemModel> GetCartItemsByCart(int cartId)
+        public IEnumerable<CartItemModel> GetCartItemsByCartOrInvoice(int? cartId, int? invoiceId)
         {
             var items = new List<CartItemModel>();
             var dt = _dBHelper.ExecuteDataTable(
                 "PR_CartItem_ListByCart",
-                new SqlParameter("@CartID", cartId)
+                new SqlParameter("@CartID", cartId),
+                new SqlParameter("@InvoiceID", invoiceId)
             );
 
             foreach (DataRow row in dt.Rows)
             {
                 items.Add(new CartItemModel()
-                    {
-                        CartItemID = Convert.ToInt32(row["CartItemID"]),
-                        ProductID = Convert.ToInt32(row["ProductID"]),
-                        ProductName = row["ProductName"].ToString(),
-                        Quantity = Convert.ToInt32(row["Quantity"]),
-                        TotalAmount = Convert.ToDecimal(row["TotalAmount"])
+                {
+                    CartItemID = Convert.ToInt32(row["CartItemID"]),
+                    ProductID = Convert.ToInt32(row["ProductID"]),
+                    ProductName = row["ProductName"].ToString(),
+                    Quantity = Convert.ToInt32(row["Quantity"]),
+                    TotalAmount = Convert.ToDecimal(row["TotalAmount"]),
+                    Price = Convert.ToDecimal(row["Price"])
                     });
             }
             return items;

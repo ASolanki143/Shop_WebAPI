@@ -10,6 +10,6 @@ namespace MyWebApiApp.Models
         public int InvoiceID { get; set; }
         public int CartID { get; set; }
         public string? ProductName { get; set; }
-
+        public decimal? Price { get; set; }
     }
 }

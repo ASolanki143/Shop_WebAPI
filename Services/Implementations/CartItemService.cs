@@ -13,9 +13,9 @@ namespace MyWebApiApp.Services.Implementations
             _cartItemRepository = cartItemRepository;
         }
 
-        public IEnumerable<CartItemModel> GetCartItemsByCart(int CartID)
+        public IEnumerable<CartItemModel> GetCartItemsByCart(int? CartID,int? InvoiceID)
         {
-            var cartItems = _cartItemRepository.GetCartItemsByCart(CartID);
+            var cartItems = _cartItemRepository.GetCartItemsByCartOrInvoice(CartID,InvoiceID);
             return cartItems;
         }
 

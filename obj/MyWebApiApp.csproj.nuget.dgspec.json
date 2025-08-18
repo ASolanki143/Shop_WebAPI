@@ -51,6 +51,10 @@
               "target": "Package",
               "version": "[6.0.2, )"
             },
+            "MongoDB.Driver": {
+              "target": "Package",
+              "version": "[3.4.2, )"
+            },
             "Scrutor": {
               "target": "Package",
               "version": "[6.1.0, )"

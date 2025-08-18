@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using MyWebApiApp.Models;
 using MyWebApiApp.Models.DTOs;
+using MyWebApiApp.Services.Implementations;
 using MyWebApiApp.Services.Interfaces;
 
 namespace MyWebApiApp.Controllers
@@ -10,6 +11,8 @@ namespace MyWebApiApp.Controllers
     public class ProductController : ControllerBase
     {
         private readonly IProductServices _productService;
+        private readonly MongoLogService _logService = new MongoLogService();
+
         public ProductController(IProductServices productServices)
         {
             _productService = productServices;
@@ -47,6 +50,10 @@ namespace MyWebApiApp.Controllers
                 response = new ApiResponse("Error while inserting product", 400);
                 return BadRequest(response);
             }
+            int? userIdValue = HttpContext.Session.GetInt32("UserID");
+            string? userId = userIdValue?.ToString();
+            string? username = HttpContext.Session.GetString("UserName");
+            _logService.InsertLog("Insert", $"Product Inserted by {username}", userId);
             response = new ApiResponse("Inserted Successfully",200);
             return Ok(response);
         }
@@ -56,17 +63,25 @@ namespace MyWebApiApp.Controllers
         [HttpPut("{ProductID}")]
         public IActionResult UpdateProduct(int ProductID, ProductModel product)
         {
+            ApiResponse response;
             if (ProductID <= 0)
             {
-                return BadRequest("ProductID is required");
+                response = new ApiResponse("ProductID is required", 400);
+                return BadRequest(response);
             }
             product.ProductID = ProductID;
             bool isUpdated = _productService.EditProduct(product);
             if (!isUpdated)
             {
-                return BadRequest("Error while updating product");
+                response = new ApiResponse("Error while updating product", 400);
+                return BadRequest(response);
             }
-            return Ok("Product Updated Successfully");
+            int? userIdValue = HttpContext.Session.GetInt32("UserID");
+            string? userId = userIdValue?.ToString();
+            string? username = HttpContext.Session.GetString("UserName");
+            _logService.InsertLog("Update", $"Product Updated by {username}", userId);
+            response = new ApiResponse("Product Updated Successfully", 200);
+            return Ok(response);
         }
         #endregion
 
@@ -74,16 +89,24 @@ namespace MyWebApiApp.Controllers
         [HttpPatch("Delete{ProductID}")]
         public IActionResult DeleteProduct(int ProductID)
         {
+            ApiResponse response;
             if (ProductID <= 0)
             {
-                return BadRequest("ProductID is required");
+                response = new ApiResponse("ProductID is required", 400);
+                return BadRequest(response);
             }
             bool isUpdated = _productService.DeleteProduct(ProductID);
             if (!isUpdated)
             {
-                return BadRequest("Error while deleting product");
+                response = new ApiResponse("Error while deleting product", 400);
+                return BadRequest(response);
             }
-            return Ok("Product Delete Successfully");
+            int? userIdValue = HttpContext.Session.GetInt32("UserID");
+            string? userId = userIdValue?.ToString();
+            string? username = HttpContext.Session.GetString("UserName");
+            _logService.InsertLog("Delete", $"Product Deleted by {username}", userId);
+            response = new ApiResponse("Product Delete Successfully", 200);
+            return Ok(response);
         }
         #endregion
     }

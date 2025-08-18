@@ -31,7 +31,7 @@ namespace MyWebApiApp.Data
             var invoices = new List<InvoiceModel>();
             var dt = _dBHelper.ExecuteDataTable(
                 "PR_Invoice_ListAll",
-                new SqlParameter("@UserID",UserID)
+                new SqlParameter("@UserID", UserID)
             );
 
             foreach (DataRow row in dt.Rows)
@@ -45,7 +45,7 @@ namespace MyWebApiApp.Data
                     Email = row["Email"].ToString(),
                     CreatedDate = Convert.ToDateTime(row["CreatedDate"]),
                     CartItemCount = Convert.ToInt32(row["CartItemCount"])
-                    });
+                });
             }
             return invoices;
         }
@@ -57,7 +57,7 @@ namespace MyWebApiApp.Data
             var invoices = new List<InvoiceModel>();
             var dt = _dBHelper.ExecuteDataTable(
                 "PR_Invoice_SelectByUser",
-                new SqlParameter("@UserID",UserID)
+                new SqlParameter("@UserID", UserID)
             );
 
             foreach (DataRow row in dt.Rows)
@@ -70,11 +70,12 @@ namespace MyWebApiApp.Data
                     UserName = row["UserName"].ToString(),
                     Email = row["Email"].ToString(),
                     CreatedDate = Convert.ToDateTime(row["CreatedDate"])
-                        
-                    });
+
+                });
             }
             return invoices;
         }
         #endregion
+
     }
 }
