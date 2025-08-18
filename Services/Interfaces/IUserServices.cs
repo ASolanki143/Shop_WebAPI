@@ -5,7 +5,7 @@ namespace MyWebApiApp.Services.Interfaces
 {
     public interface IUserService
     {
-        LoginResponseDto? Login(string UserName, string Password);
+        LoginResponse? Login(string UserName, string Password);
         IEnumerable<UserModel>? GetAllUser();
         LogoutResult Logout();
     }

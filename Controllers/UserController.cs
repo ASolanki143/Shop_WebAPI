@@ -1,7 +1,4 @@
-using Azure.Messaging;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using MyWebApiApp.Data;
 using MyWebApiApp.Models.DTOs;
 using MyWebApiApp.Services.Implementations;
 using MyWebApiApp.Services.Interfaces;
@@ -25,7 +22,7 @@ namespace MyWebApiApp.Controllers
         {
             ApiResponse response;
             var users = _userService?.GetAllUser();
-            if (users == null)
+            if (users == null || !users.Any())
             {
                 response = new ApiResponse("Users not found", 404);
                 return NotFound(response);
@@ -36,29 +33,20 @@ namespace MyWebApiApp.Controllers
         #endregion
 
         [HttpPost("LoginUser")]
-        public IActionResult LoginUser(LoginRequestDto? request)
+        public IActionResult LoginUser(LoginRequest? request)
         {
-            try
+            ApiResponse response;
+            var user = _userService?.Login(request.UserName, request.Password);
+            if (user == null)
             {
-                ApiResponse response;
-                var user = _userService?.Login(request.UserName, request.Password);
-                if (user == null)
-                {
-                    response = new ApiResponse("User Not found", 404);
-                    return NotFound(response);
-                }
-                string? userId = user.UserID.ToString();
-                string role = user.Role;
-                // _logService.InsertLog("Login", $"{role} logged in", userId);
-                Console.WriteLine("user is not null");
-                response = new ApiResponse(user, "User login successfully", 200);
-                return Ok(response);
+                response = new ApiResponse("User Not found", 404);
+                return NotFound(response);
             }
-            catch (Exception e)
-            {
-                Console.WriteLine("Exceofihg");
-                return BadRequest(e.Message);
-            }
+            string? userId = user.UserID.ToString();
+            string role = user.Role;
+            // _logService.InsertLog("Login", $"{role} logged in", userId);
+            response = new ApiResponse(user, "User login successfully", 200);
+            return Ok(response);
         }
 
         [HttpPost("Logout")]

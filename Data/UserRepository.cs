@@ -35,22 +35,18 @@ namespace MyWebApiApp.Data
         #endregion
 
         #region Login
-        public LoginResponseDto? Login(String UserName, String Password)
+        public LoginResponse? Login(string userName, string password)
         {
-            Console.WriteLine("Login Repository");
-            Console.WriteLine(UserName);
-            Console.WriteLine(Password);
-            LoginResponseDto? user = null;
             var dt = _dBHelper.ExecuteDataTable(
                 "PR_User_Login",
-                new SqlParameter("@UserName",UserName),
-                new SqlParameter("@Password",Password)
+                new SqlParameter("@UserName",userName),
+                new SqlParameter("@Password",password)
             );
 
             if (dt.Rows.Count == 0) return null;
             var row = dt.Rows[0];
             
-            return new LoginResponseDto()
+            return new LoginResponse()
             {
                 UserID = (int)row["UserID"],
                 UserName = row["UserName"].ToString(),

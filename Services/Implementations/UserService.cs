@@ -15,15 +15,15 @@ namespace MyWebApiApp.Services.Implementations
             _httpContextAccessor = httpContextAccessor;
         }
 
-        public LoginResponseDto? Login(string? UserName, string? Password)
+        public LoginResponse? Login(string userName = "", string password = "")
         {
             Console.WriteLine("Login Services");
-            if (string.IsNullOrEmpty(UserName) || string.IsNullOrEmpty(Password))
+            if (string.IsNullOrEmpty(userName) || string.IsNullOrEmpty(password))
             {
                 throw new ArgumentException("Username or password are required");
             }
 
-            LoginResponseDto? user = _userRepository?.Login(UserName: UserName, Password: Password);
+            LoginResponse? user = _userRepository?.Login(userName, password);
             if (user != null)
             {
                 var session = _httpContextAccessor.HttpContext!.Session;
@@ -43,7 +43,7 @@ namespace MyWebApiApp.Services.Implementations
         public LogoutResult Logout()
         {
             var session = _httpContextAccessor.HttpContext!.Session;
-            string role = session.GetString("Role");
+            string? role = session.GetString("Role");
             int? userIdValue = session.GetInt32("UserID");
 
             string? userId = userIdValue?.ToString();
