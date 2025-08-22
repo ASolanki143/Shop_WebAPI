@@ -4,7 +4,7 @@ namespace MyWebApiApp.Services.Interfaces
 {
     public interface IInvoiceServices
     {
-        bool InsertInvoice(int cartId);
+        bool InsertInvoice(int? userId);
         IEnumerable<InvoiceResponse> GetAllInvices(int? userId);        
     }
 }

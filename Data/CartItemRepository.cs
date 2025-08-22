@@ -3,6 +3,7 @@ using MyWebApiApp.Models;
 using Microsoft.Data.SqlClient;
 using MyWebApiApp.Utilities;
 using MyWebApiApp.Models.DTOs;
+using MongoDB.Driver;
 
 namespace MyWebApiApp.Data
 {
@@ -18,12 +19,15 @@ namespace MyWebApiApp.Data
         #region Add Cart Item
         public bool AddCartItem(CartItemDto cartItemModel)
         {
+            Console.WriteLine("Add Cart Item Repository");
             int rowAffected = _dBHelper.ExecuteNonQuery(
                 "PR_CartItem_Add",
-                new SqlParameter("@CartID", cartItemModel.CartID),
+                new SqlParameter("@UserID", cartItemModel.UserID),
                 new SqlParameter("@ProductID", cartItemModel.ProductID),
                 new SqlParameter("@Quantity", cartItemModel.Quantity)
             );
+            Console.WriteLine("After Add Cart Item Repository");
+
             return rowAffected > 0;
         }
         #endregion
@@ -52,12 +56,12 @@ namespace MyWebApiApp.Data
         #endregion
 
         #region Get Cart Items by Cart
-        public IEnumerable<CartItemModel> GetCartItemsByCart(int cartId)
+        public IEnumerable<CartItemModel> GetCartItemsByCart(int? userId)
         {
             var items = new List<CartItemModel>();
             var dt = _dBHelper.ExecuteDataTable(
                 "PR_CartItem_ListByCart",
-                new SqlParameter("@CartID", cartId)
+                new SqlParameter("@UserID", userId)
             );
 
             foreach (DataRow row in dt.Rows)
@@ -75,5 +79,37 @@ namespace MyWebApiApp.Data
             return items;
         }
         #endregion
+
+        public CartItemResponse CheckForCart(int productId, int? userId)
+        {
+            CartItemResponse? item = null;
+            var dt = _dBHelper.ExecuteDataTable(
+                "PR_CartItem_GetIfExists",
+                new SqlParameter("@UserID", userId),
+                new SqlParameter("@ProductID", productId)
+            );
+
+            if (dt.Rows.Count == 0)
+            {
+                return null;
+            }
+            var row = dt.Rows[0];
+            Console.WriteLine("dfghjkl");
+            item = new CartItemResponse()
+            {
+                CartItemID = row["CartItemID"] == DBNull.Value ? null : Convert.ToInt32(row["CartItemID"]),
+                ProductID = row["ProductID"] == DBNull.Value ? 0 : Convert.ToInt32(row["ProductID"]),
+                ProductName = row["ProductName"] == DBNull.Value ? string.Empty : row["ProductName"].ToString(),
+                CartQuantity = row["CartQuantity"] == DBNull.Value ? 0 : Convert.ToInt32(row["CartQuantity"]),
+                ProductStock = row["ProductStock"] == DBNull.Value ? 0 : Convert.ToInt32(row["ProductStock"]),
+                TotalAmount = row["TotalAmount"] == DBNull.Value ? 0m : Convert.ToDecimal(row["TotalAmount"])
+            };
+
+            Console.WriteLine(item.ToString());
+            Console.WriteLine(item.CartItemID);
+            Console.WriteLine(item.CartQuantity);
+            Console.WriteLine(item.ProductName);
+            return item;
+        }
     }
 }

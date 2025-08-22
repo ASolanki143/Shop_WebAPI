@@ -15,11 +15,11 @@ namespace MyWebApiApp.Data
         }
 
         #region Create Invoice from Cart
-        public bool CreateInvoiceFromCart(int cartId)
+        public bool CreateInvoiceFromCart(int? userId)
         {
             int rowAffected = _dBHelper.ExecuteNonQuery(
-                "PR_Invoice_CreateFromCart",
-                new SqlParameter("@CartID", cartId)
+                "PR_Invoice_Add",
+                new SqlParameter("@UserID", userId)
             );
             return rowAffected > 0;
         }

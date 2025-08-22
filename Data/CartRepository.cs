@@ -26,13 +26,14 @@ namespace MyWebApiApp.Data
         }
         #endregion
 
+
         #region Get All Carts
         public IEnumerable<CartModel> SelectAllCarts(int? userId)
         {
             var carts = new List<CartModel>();
             var dt = _dBHelper.ExecuteDataTable(
                 "PR_Cart_ListAll",
-                new SqlParameter("@UserID",userId)
+                new SqlParameter("@UserID", userId)
             );
             foreach (DataRow row in dt.Rows)
             {
@@ -42,7 +43,7 @@ namespace MyWebApiApp.Data
                     TotalAmount = Convert.ToDecimal(row["TotalAmount"]),
                     UserID = Convert.ToInt32(row["UserID"]),
                     CreatedDate = Convert.ToDateTime(row["CreatedDate"]),
-                    CartItemCount = Convert.ToInt32(row["CartItemCount"])   
+                    CartItemCount = Convert.ToInt32(row["CartItemCount"])
                 });
             }
             return carts;

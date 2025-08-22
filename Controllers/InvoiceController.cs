@@ -18,17 +18,12 @@ namespace MyWebApiApp.Controllers
 
         #region Create Invoice from Cart
         [LogAction("Invoice Insert")]
-        [HttpPost("CreateFromCart/{cartId}")]
-        public IActionResult CreateInvoiceFromCart(int cartId)
+        [HttpPost()]
+        public IActionResult CreateInvoiceFromCart()
         {
             ApiResponse response;
-            if (cartId <= 0)
-            {
-                response = new ApiResponse("Invalid card id",400);
-                return BadRequest(response);
-            }
-
-            bool isCreated = _invoiceService.InsertInvoice(cartId);
+            int? userId = HttpContext.Session.GetInt32("UserID");
+            bool isCreated = _invoiceService.InsertInvoice(userId);
             if (!isCreated)
             {
                 throw new Exception("Error while creating invoice from cart");

@@ -21,18 +21,22 @@ namespace MyWebApiApp.Services.Implementations
             return carts;
         }
 
-        public bool AddCart(int userId, List<CartItemDto> cartItems)
-        {
-            int cartId = _cartRepository.AddCart(userId);
-            foreach (CartItemDto model in cartItems)
-            {
-                model.CartID = cartId;
-                _cartItemService.AddCartItem(model);
-            }
-            UpdateTotal(cartId);
-            return cartId > 0;
-        }
+        // public bool AddCart(int userId, List<CartItemDto> cartItems)
+        // {
+        //     int cartId = _cartRepository.AddCart(userId);
+        //     foreach (CartItemDto model in cartItems)
+        //     {
+        //         model.CartID = cartId;
+        //         _cartItemService.AddCartItem(model);
+        //     }
+        //     UpdateTotal(cartId);
+        //     return cartId > 0;
+        // }
 
+        public int GetCartByUser(int? userId)
+        {
+            return 1;
+        }
         public bool DeleteCart(int cartId)
         {
             bool isDeleted = _cartRepository.DeleteCart(cartId);

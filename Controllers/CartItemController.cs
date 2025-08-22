@@ -17,16 +17,12 @@ namespace MyWebApiApp.Controllers
         }
 
         #region List Cart Items
-        [HttpGet("{cartId}")]
-        public IActionResult GetCartItems(int cartId)
+        [HttpGet()]
+        public IActionResult GetCartItems()
         {
             ApiResponse response;
-            var items = _cartItemService.GetCartItemsByCart(cartId);
-            if (items == null || !items.Any())
-            {
-                response = new ApiResponse("No items found for this cart", 404);
-                return NotFound(response);
-            }
+            int? userId = HttpContext.Session.GetInt32("UserID");
+            var items = _cartItemService.GetCartItemsByCart(userId);
             response = new ApiResponse(items, "Cart Items fetch successfully", 200);
             return Ok(response);
         }
@@ -37,11 +33,13 @@ namespace MyWebApiApp.Controllers
         public IActionResult AddCartItem([FromBody] CartItemDto cartItem)
         {
             ApiResponse response;
-            if (cartItem == null || cartItem.CartID <= 0 || cartItem.ProductID <= 0)
+            if (cartItem == null || cartItem.ProductID <= 0)
             {
                 response = new ApiResponse("Invalid cart item data", 400);
                 return BadRequest(response);
             }
+            int? userId = HttpContext.Session.GetInt32("UserID");
+            cartItem.UserID = userId;
             bool isAdded = _cartItemService.AddCartItem(cartItem);
             if (!isAdded)
             {
@@ -73,7 +71,7 @@ namespace MyWebApiApp.Controllers
         #endregion
 
         #region Delete Cart Item
-        [HttpPatch("Delete/{cartItemId}")]
+        [HttpDelete("{cartItemId}")]
         public IActionResult DeleteCartItem(int cartItemId)
         {
             ApiResponse response;
@@ -85,11 +83,35 @@ namespace MyWebApiApp.Controllers
             bool isDeleted = _cartItemService.DeleteCartItem(cartItemId);
             if (!isDeleted)
             {
-                throw new Exception("Error while deleting cart item");
+                response = new ApiResponse("Error while deleting cart item", 500);
+                return StatusCode(500, response);
             }
             response = new ApiResponse("Cart item deleted successfully", 200);
             return Ok(response);
         }
         #endregion
+
+        [HttpGet("CheckforCart/{productId}")]
+        public IActionResult CheckForCart(int productId)
+        {
+            ApiResponse response;
+            if (productId == null || productId <= 0)
+            {
+                response = new ApiResponse("Product id is invalid", 400);
+                return BadRequest(response);
+            }
+
+            int? userId = HttpContext.Session.GetInt32("UserID");
+            var data = _cartItemService.CheckForCart(productId, userId);
+            if (data.CartItemID == null)
+            {
+                response = new ApiResponse(data, "Item not found in cart", 404);
+            }
+            else
+            {
+                response = new ApiResponse(data, "Item Found in cart", 200);
+            }
+            return Ok(response);
+        }
     }
 }

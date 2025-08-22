@@ -67,12 +67,10 @@
 // app.Run();
 using MyWebApiApp.Data;
 using MyWebApiApp.Middlewares;
-using MyWebApiApp.Services.Implementations;
-using MyWebApiApp.Services.Interfaces;
+
 using MyWebApiApp.Utilities;
 using System.Reflection;
-using Scrutor;
-using MyWebApiApp.Filters;
+
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -82,7 +80,7 @@ builder.Services.AddCors(options =>
     options.AddPolicy("AllowFrontend",
         policy =>
         {
-            policy.WithOrigins("http://127.0.0.1:5500") // e.g., http://127.0.0.1:5500
+            policy.WithOrigins("http://127.0.0.1:5501","http://localhost:4200") // e.g., http://127.0.0.1:5500
                   .AllowAnyMethod()
                   .AllowAnyHeader()
                   .AllowCredentials(); // ✅ allow sending cookies
@@ -130,8 +128,9 @@ builder.Services.AddDistributedMemoryCache();
 
 var app = builder.Build();
 
+app.UseMiddleware<GlobalExceptionMiddleware>();
+
 // ✅ Use correct CORS policy
-app.UseCors("AllowFrontend");
 
 if (app.Environment.IsDevelopment())
 {
@@ -139,14 +138,12 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-if (!app.Environment.IsDevelopment())
-{
-    app.UseExceptionHandler("/error");
-}
 // app.UseHttpsRedirection();
+app.UseCors("AllowFrontend");
 
 // ✅ Order matters — session BEFORE auth & middleware
 app.UseSession();
+
 
 app.UseAuthorization();
 app.Use(async (context, next) =>

@@ -5,9 +5,11 @@ namespace MyWebApiApp.Services.Interfaces
 {
     public interface ICartItemServices
     {
-        IEnumerable<CartItemModel> GetCartItemsByCart(int cartId);
+        IEnumerable<CartItemModel> GetCartItemsByCart(int? userId);
         bool AddCartItem(CartItemDto cartItem);
         bool UpdateCartItem(int cartItemId, int Quantity);
         bool DeleteCartItem(int cartItemId);
+
+        CartItemResponse CheckForCart(int productId,int? userId);
     }
 }

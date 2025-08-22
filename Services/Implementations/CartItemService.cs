@@ -13,9 +13,10 @@ namespace MyWebApiApp.Services.Implementations
             _cartItemRepository = cartItemRepository;
         }
 
-        public IEnumerable<CartItemModel> GetCartItemsByCart(int cartId)
+        public IEnumerable<CartItemModel> GetCartItemsByCart(int? userId)
         {
-            var cartItems = _cartItemRepository.GetCartItemsByCart(cartId);
+            if (userId == null) return new List<CartItemModel>();
+            var cartItems = _cartItemRepository.GetCartItemsByCart(userId);
             return cartItems;
         }
 
@@ -36,5 +37,12 @@ namespace MyWebApiApp.Services.Implementations
             bool isDeleted = _cartItemRepository.DeleteCartItem(cartItemId);
             return isDeleted;
         }
+
+        public CartItemResponse CheckForCart(int productId, int? userId)
+        {
+            var item = _cartItemRepository.CheckForCart(productId, userId);
+            return item;
+        }
+        
     }
 }

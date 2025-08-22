@@ -1,7 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using MyWebApiApp.Filters;
 using MyWebApiApp.Models.DTOs;
-using MyWebApiApp.Services.Implementations;
 using MyWebApiApp.Services.Interfaces;
 
 namespace MyWebApiApp.Controllers

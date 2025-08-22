@@ -37,21 +37,21 @@ namespace MyWebApiApp.Controllers
         }
         #endregion
 
-        #region Add Cart
-        [HttpPost]
-        public IActionResult AddCart([FromBody] List<CartItemDto> cartItems)
-        {
-            ApiResponse response;
-            int userId = (int)HttpContext.Session.GetInt32("UserID");
-            bool isInserted = _cartService.AddCart(userId,cartItems);
-            if (!isInserted)
-            {
-                throw new Exception("Error while inserting cart");
-            }
-            response = new ApiResponse("Cart added successfully", 200);
-            return Ok(response);
-        }
-        #endregion  
+        // #region Add Cart
+        // [HttpPost]
+        // public IActionResult AddCart([FromBody] List<CartItemDto> cartItems)
+        // {
+        //     ApiResponse response;
+        //     int userId = (int)HttpContext.Session.GetInt32("UserID");
+        //     bool isInserted = _cartService.AddCart(userId,cartItems);
+        //     if (!isInserted)
+        //     {
+        //         throw new Exception("Error while inserting cart");
+        //     }
+        //     response = new ApiResponse("Cart added successfully", 200);
+        //     return Ok(response);
+        // }
+        // #endregion  
 
         #region Delete Cart
         [HttpPatch("Delete/{cartId}")]

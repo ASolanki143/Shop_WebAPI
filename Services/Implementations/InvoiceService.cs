@@ -13,9 +13,10 @@ namespace MyWebApiApp.Services.Implementations
             _invoiceRepository = invoiceRepository;
         }
 
-        public bool InsertInvoice(int cartId)
+        public bool InsertInvoice(int? userId)
         {
-            bool inInserted = _invoiceRepository.CreateInvoiceFromCart(cartId);
+            if (userId == null) return false;
+            bool inInserted = _invoiceRepository.CreateInvoiceFromCart(userId);
             return inInserted;
         }
 
