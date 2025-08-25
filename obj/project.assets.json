@@ -3344,24 +3344,27 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\ayush.solanki\\.nuget\\packages\\": {}
+    "C:\\Users\\Ayush Solanki\\.nuget\\packages\\": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "D:\\Shop_Task1\\MyWebApiApp\\MyWebApiApp.csproj",
+      "projectUniqueName": "D:\\42Gears\\Shop_WebAPI\\MyWebApiApp.csproj",
       "projectName": "MyWebApiApp",
-      "projectPath": "D:\\Shop_Task1\\MyWebApiApp\\MyWebApiApp.csproj",
-      "packagesPath": "C:\\Users\\ayush.solanki\\.nuget\\packages\\",
-      "outputPath": "D:\\Shop_Task1\\MyWebApiApp\\obj\\",
+      "projectPath": "D:\\42Gears\\Shop_WebAPI\\MyWebApiApp.csproj",
+      "packagesPath": "C:\\Users\\Ayush Solanki\\.nuget\\packages\\",
+      "outputPath": "D:\\42Gears\\Shop_WebAPI\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
-        "C:\\Users\\ayush.solanki\\AppData\\Roaming\\NuGet\\NuGet.Config"
+        "C:\\Users\\Ayush Solanki\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
       "originalTargetFrameworks": [
         "net8.0"
       ],
       "sources": {
+        "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+        "C:\\Program Files\\dotnet\\library-packs": {},
         "https://api.nuget.org/v3/index.json": {}
       },
       "frameworks": {
@@ -3429,7 +3432,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.408/PortableRuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.302/PortableRuntimeIdentifierGraph.json"
       }
     }
   }
